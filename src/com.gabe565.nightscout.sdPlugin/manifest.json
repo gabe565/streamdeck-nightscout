@@ -1,0 +1,41 @@
+{
+  "SDKVersion": 2,
+  "Author": "Gabe Cook",
+  "CodePath": "index.html",
+  "Description": "Nightscout for the Stream Deck",
+  "Name": "Nightscout",
+  "Icon": "actions/template/assets/icon",
+  "URL": "https://github.com/gabe565/streamdeck-nightscout",
+  "Version": "1.0.0",
+  "Software": {
+    "MinimumVersion": "5.0"
+  },
+  "OS": [
+    {
+      "Platform": "mac",
+      "MinimumVersion": "10.11"
+    },
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Category": "Nightscout",
+  "CategoryIcon": "actions/template/assets/category",
+  "Actions": [
+    {
+      "Icon": "actions/template/assets/action",
+      "Name": "Nightscout",
+      "Controllers": ["Keypad"],
+      "States": [
+        {
+          "Image": "actions/template/assets/unloaded"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Tooltip": "Nightscout for the Stream Deck",
+      "UUID": "com.gabe565.nightscout.action",
+      "PropertyInspectorPath": "actions/template/property-inspector/index.html"
+    }
+  ]
+}
