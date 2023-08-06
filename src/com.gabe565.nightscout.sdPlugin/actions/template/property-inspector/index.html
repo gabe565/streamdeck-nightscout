@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta
+            name="viewport"
+            content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <title>com.gabe565.nightscout Property Inspector</title>
+    <link rel="stylesheet" href="../../../libs/css/sdpi.css"/>
+</head>
+<body>
+<div class="sdpi-wrapper">
+    <form id="property-inspector">
+        <div type="textarea" class="sdpi-item" id="required_text">
+            <label for="nightscout_url" class="sdpi-item-label">Nightscout URL</label>
+            <span class="sdpi-item-value">
+            <input type="text" id="nightscout_url" name="nightscoutUrl" required/>
+          </span>
+        </div>
+    </form>
+</div>
+
+<!-- Stream Deck Libs -->
+<script src="../../../libs/js/constants.js"></script>
+<script src="../../../libs/js/prototypes.js"></script>
+<script src="../../../libs/js/timers.js"></script>
+<script src="../../../libs/js/utils.js"></script>
+<script src="../../../libs/js/events.js"></script>
+<script src="../../../libs/js/api.js"></script>
+<script src="../../../libs/js/property-inspector.js"></script>
+<script src="../../../libs/js/dynamic-styles.js"></script>
+
+<!-- Property Inspector Source -->
+<script src="../../../js/const.js"></script>
+<script src="inspector.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "Description": "Nightscout for the Stream Deck",
+  "Name": "Nightscout",
+  "Category": "Nightscout",
+  "com.gabe565.nightscout.action": {
+    "Name": "Nightscout",
+    "Tooltip": "Nightscout for the Stream Deck"
+  },
+  "Localization": {
+    "Nightscout URL": "Nightscout URL"
+  }
+}
