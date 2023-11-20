@@ -7,6 +7,8 @@ class Nightscout {
     }
     this.template = new Template();
     this.context = context;
+    this.url = "";
+    this.request = { headers: {} };
     this.settings = settings;
     nightscoutMap[context] = this;
   }
@@ -14,6 +16,11 @@ class Nightscout {
   set settings(settings) {
     this._settings = settings;
     if (this.settings.nightscoutUrl) {
+      this.url = new URL(this.settings.nightscoutUrl);
+      this.url.pathname += "api/v2/properties";
+      if (this.settings.token) {
+        this.request.headers["Api-Secret"] = this.settings.token;
+      }
       this.beginTick();
     }
   }
@@ -23,18 +30,12 @@ class Nightscout {
   }
 
   async tick() {
-    if (!this.settings.nightscoutUrl) {
+    if (!this.url) {
       return;
     }
 
     try {
-      const url = new URL(this.settings.nightscoutUrl);
-      url.pathname += "api/v2/properties";
-      const headers = {};
-      if (this.settings.token) {
-        headers["Api-Secret"] = this.settings.token;
-      }
-      const response = await fetch(url, { headers });
+      const response = await fetch(this.url, this.request);
       const data = await response.json();
       $SD.setImage(this.context, this.template.render(data));
     } catch (err) {
@@ -44,7 +45,7 @@ class Nightscout {
   }
 
   beginTick() {
-    if (!this.settings.nightscoutUrl) {
+    if (!this.url) {
       return;
     }
 
