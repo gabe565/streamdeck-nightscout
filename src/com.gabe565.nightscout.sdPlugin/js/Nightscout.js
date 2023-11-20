@@ -30,7 +30,11 @@ class Nightscout {
     try {
       const url = new URL(this.settings.nightscoutUrl);
       url.pathname += "api/v2/properties";
-      const response = await fetch(url);
+      const headers = {};
+      if (this.settings.token) {
+        headers["Api-Secret"] = this.settings.token;
+      }
+      const response = await fetch(url, { headers });
       const data = await response.json();
       $SD.setImage(this.context, this.template.render(data));
     } catch (err) {
