@@ -9,24 +9,31 @@ class Nightscout {
     this.context = context;
     this.url = "";
     this.request = { headers: {} };
-    this.settings = settings;
+    this.setSettings(settings);
     nightscoutMap[context] = this;
   }
 
-  set settings(settings) {
-    this._settings = settings;
+  async setSettings(settings) {
+    this.settings = settings;
     if (this.settings.nightscoutUrl) {
+      if (this.settings.token) {
+        try {
+          const buffer = new TextEncoder().encode(this.settings.token);
+          const hashBuffer = await crypto.subtle.digest("SHA-1", buffer);
+          const hashArray = Array.from(new Uint8Array(hashBuffer));
+          this.request.headers["Api-Secret"] = hashArray
+            .map((b) => b.toString(16).padStart(2, "0"))
+            .join("");
+        } catch (err) {
+          console.error(err);
+          this.request.headers["Api-Secret"] = this.settings.token;
+          $SD.showAlert(this.context);
+        }
+      }
       this.url = new URL(this.settings.nightscoutUrl);
       this.url.pathname += "api/v2/properties";
-      if (this.settings.token) {
-        this.request.headers["Api-Secret"] = this.settings.token;
-      }
       this.beginTick();
     }
-  }
-
-  get settings() {
-    return this._settings;
   }
 
   async tick() {
