@@ -5,7 +5,7 @@
 const nightscoutAction = new Action("com.gabe565.nightscout.action");
 
 nightscoutAction.onDidReceiveSettings(
-  ({ payload: { settings } }) => (new Nightscout(data).settings = settings),
+  (data) => (new Nightscout(data).settings = data.payload.settings),
 );
 
 nightscoutAction.onKeyDown((data) => new Nightscout(data).beginTick());
