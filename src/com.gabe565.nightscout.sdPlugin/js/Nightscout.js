@@ -44,7 +44,7 @@ class Nightscout {
     try {
       const response = await fetch(this.url, this.request);
       const data = await response.json();
-      $SD.setImage(this.context, this.template.render(data));
+      $SD.setImage(this.context, this.template.render(data, this.settings.unit));
     } catch (err) {
       console.error(err);
       $SD.showAlert(this.context);

@@ -14,7 +14,7 @@ class Template {
     this.img.src = "actions/template/assets/action.svg";
   }
 
-  render(data) {
+  render(data, unit) {
     if (!this.loaded) {
       return;
     }
@@ -29,13 +29,21 @@ class Template {
     context.fillStyle = "white";
     context.textAlign = "center";
     context.font = "36px Verdana";
-    context.fillText(data.bgnow.last, Width / 2 + 20, Height / 2);
+    let last = data.bgnow.last;
+    if (unit === Unit.Mmol) {
+      last = Math.round(last * ConversionFactor * 10) / 10;
+    }
+    context.fillText(last, Width / 2 + 20, Height / 2);
+
     context.font = "26px Verdana";
-    context.fillText(
-      `${data.direction.label} ${data.delta.display}`,
-      Width / 2 + 20,
-      Height / 2 + 30,
-    );
+    let delta = data.delta.display;
+    if (unit === Unit.Mmol) {
+      delta = Math.round(data.delta.scaled * ConversionFactor * 10) / 10;
+      if (delta >= 0) {
+        delta = "+" + delta;
+      }
+    }
+    context.fillText(`${data.direction.label} ${delta}`, Width / 2 + 20, Height / 2 + 30);
 
     return this.canvas.toDataURL();
   }
