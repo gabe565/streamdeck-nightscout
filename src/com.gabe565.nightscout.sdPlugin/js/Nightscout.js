@@ -41,14 +41,25 @@ class Nightscout {
       return;
     }
 
+    let sleepMs = 60000;
     try {
       const response = await fetch(this.url, this.request);
       const data = await response.json();
       $SD.setImage(this.context, this.template.render(data, this.settings.unit));
+      const bucket = data?.buckets[0];
+      if (bucket) {
+        const lastDiff = bucket.toMills - bucket.fromMills;
+        const nextRead = data?.bgnow?.mills + lastDiff + 30000;
+        const now = Date.now();
+        if (nextRead - now > 0) {
+          sleepMs = nextRead - now;
+        }
+      }
     } catch (err) {
       console.error(err);
       $SD.showAlert(this.context);
     }
+    this.tickTimeout = setTimeout(() => this.tick(), sleepMs);
   }
 
   beginTick() {
@@ -56,13 +67,12 @@ class Nightscout {
       return;
     }
 
-    this.tick();
     this.stopTick();
-    this.tickInterval = setInterval(() => this.tick(), this.settings.updateInterval || 60000);
+    this.tick();
   }
 
   stopTick() {
-    clearInterval(this.tickInterval);
-    this.tickInterval = null;
+    clearTimeout(this.tickTimeout);
+    this.tickTimeout = null;
   }
 }
