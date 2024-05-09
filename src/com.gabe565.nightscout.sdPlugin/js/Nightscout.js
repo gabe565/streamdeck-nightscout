@@ -14,7 +14,7 @@ class Nightscout {
   }
 
   async setSettings(settings) {
-    this.settings = settings;
+    this.settings = { ...DefaultSettings, ...settings };
     if (this.settings.nightscoutUrl) {
       if (this.settings.token) {
         try {
