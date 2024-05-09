@@ -65,8 +65,4 @@ class Template {
 
     return this.canvas.toDataURL();
   }
-
-  setData(data) {
-    // stub
-  }
 }
