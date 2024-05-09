@@ -1,4 +1,4 @@
-let nightscoutMap = {};
+const nightscoutMap = {};
 
 class Nightscout {
   constructor({ context, payload: { settings } }) {
