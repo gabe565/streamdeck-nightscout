@@ -10,6 +10,13 @@ nightscoutAction.onDidReceiveSettings((data) =>
 
 nightscoutAction.onKeyDown((data) => new Nightscout(data).beginTick());
 
-nightscoutAction.onWillDisappear((data) => new Nightscout(data).stopTick());
+nightscoutAction.onWillDisappear((data) => {
+  const ns = new Nightscout(data);
+  if (Object.keys(data.payload.settings).length === 0) {
+    ns.delete();
+  } else {
+    ns.stopTick();
+  }
+});
 
 nightscoutAction.onWillAppear((data) => new Nightscout(data).beginTick());

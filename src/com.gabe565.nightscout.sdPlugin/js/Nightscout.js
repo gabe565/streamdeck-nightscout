@@ -75,4 +75,9 @@ class Nightscout {
     clearTimeout(this.tickTimeout);
     this.tickTimeout = null;
   }
+
+  delete() {
+    this.stopTick();
+    delete nightscoutMap[this.context];
+  }
 }
