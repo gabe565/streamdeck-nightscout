@@ -49,14 +49,18 @@ class Nightscout {
       this.response = await response.json();
       this.render();
 
-      const bucket = this.response?.buckets[0];
-      if (bucket) {
-        const lastDiff = bucket?.toMills - bucket?.fromMills;
-        const nextRead = this.response?.bgnow.mills + lastDiff + 30000;
-        const now = Date.now();
-        if (nextRead - now > 0) {
-          sleepMs = nextRead - now;
+      try {
+        const bucket = this.response.buckets[0];
+        if (bucket) {
+          const lastDiff = bucket.toMills - bucket.fromMills;
+          const nextRead = this.response.bgnow.mills + lastDiff + 30000;
+          const now = Date.now();
+          if (nextRead - now > 0) {
+            sleepMs = nextRead - now;
+          }
         }
+      } catch (err) {
+        console.error(err);
       }
     } catch (err) {
       console.error(err);
