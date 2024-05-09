@@ -32,24 +32,27 @@ class Nightscout {
       }
       this.url = new URL(this.settings.nightscoutUrl);
       this.url.pathname += "api/v2/properties/bgnow,buckets,delta,direction";
-      this.beginTick();
+      this.start();
     }
   }
 
-  async tick() {
+  async fetch() {
     if (!this.url) {
       return;
     }
 
+    this.fetchTimeout = null;
+
     let sleepMs = 60000;
     try {
       const response = await fetch(this.url, this.request);
-      const data = await response.json();
-      $SD.setImage(this.context, this.template.render(data, this.settings.unit));
-      const bucket = data?.buckets[0];
+      this.response = await response.json();
+      this.render();
+
+      const bucket = this.response?.buckets[0];
       if (bucket) {
-        const lastDiff = bucket.toMills - bucket.fromMills;
-        const nextRead = data?.bgnow?.mills + lastDiff + 30000;
+        const lastDiff = bucket?.toMills - bucket?.fromMills;
+        const nextRead = this.response?.bgnow.mills + lastDiff + 30000;
         const now = Date.now();
         if (nextRead - now > 0) {
           sleepMs = nextRead - now;
@@ -59,25 +62,64 @@ class Nightscout {
       console.error(err);
       $SD.showAlert(this.context);
     }
-    this.tickTimeout = setTimeout(() => this.tick(), sleepMs);
+
+    if (!this.fetchTimeout) {
+      this.fetchTimeout = setTimeout(() => this.fetch(), sleepMs);
+    }
   }
 
-  beginTick() {
+  render() {
+    if (!this.response) {
+      return;
+    }
+
+    this.renderTimeout = null;
+
+    const image = this.template.render(this.response, this.settings.unit);
+    if (image) {
+      $SD.setImage(this.context, image);
+      if (!this.renderTimeout) {
+        let sleepMs = 60000;
+        try {
+          const mills = this.response.bgnow.mills;
+          if (mills) {
+            let diff = (Date.now() - mills) % 60000;
+            sleepMs = 60000 - diff;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+
+        if (!this.renderTimeout) {
+          this.renderTimeout = setTimeout(() => this.render(), sleepMs);
+        }
+      }
+    }
+  }
+
+  async start() {
     if (!this.url) {
       return;
     }
 
-    this.stopTick();
-    this.tick();
+    this.stop();
+    await this.fetch();
   }
 
-  stopTick() {
-    clearTimeout(this.tickTimeout);
-    this.tickTimeout = null;
+  stop() {
+    if (this.fetchTimeout) {
+      clearTimeout(this.fetchTimeout);
+    }
+    this.fetchTimeout = null;
+
+    if (this.renderTimeout) {
+      clearTimeout(this.renderTimeout);
+    }
+    this.renderTimeout = null;
   }
 
   delete() {
-    this.stopTick();
+    this.stop();
     delete nightscoutMap[this.context];
   }
 }

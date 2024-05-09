@@ -8,15 +8,15 @@ nightscoutAction.onDidReceiveSettings((data) =>
   new Nightscout(data).setSettings(data.payload.settings),
 );
 
-nightscoutAction.onKeyDown((data) => new Nightscout(data).beginTick());
+nightscoutAction.onKeyDown((data) => new Nightscout(data).start());
 
 nightscoutAction.onWillDisappear((data) => {
   const ns = new Nightscout(data);
   if (Object.keys(data.payload.settings).length === 0) {
     ns.delete();
   } else {
-    ns.stopTick();
+    ns.stop();
   }
 });
 
-nightscoutAction.onWillAppear((data) => new Nightscout(data).beginTick());
+nightscoutAction.onWillAppear((data) => new Nightscout(data).start());

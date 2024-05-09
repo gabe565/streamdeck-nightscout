@@ -26,16 +26,17 @@ class Template {
     const imgHeight = Height / 4;
     context.drawImage(this.img, 10, Height / 2 - imgHeight / 2, imgWidth, imgHeight);
 
-    context.fillStyle = "white";
+    context.fillStyle = "#fff";
     context.textAlign = "center";
     context.font = "36px Verdana";
     let last = data.bgnow.last;
     if (unit === Unit.Mmol) {
       last = Math.round(last * ConversionFactor * 10) / 10;
     }
-    context.fillText(last, Width / 2 + 20, Height / 2);
+    context.fillText(last, Width / 2 + 20, Height / 2 - 10);
 
-    context.font = "26px Verdana";
+    context.font = "25px Verdana";
+    context.fillStyle = "#ddd";
     let delta = data.delta.display;
     if (unit === Unit.Mmol) {
       delta = Math.round(data.delta.scaled * ConversionFactor * 10) / 10;
@@ -43,7 +44,18 @@ class Template {
         delta = "+" + delta;
       }
     }
-    context.fillText(`${data.direction.label} ${delta}`, Width / 2 + 20, Height / 2 + 30);
+    context.fillText(`${data.direction.label} ${delta}`, Width / 2 + 20, Height / 2 + 20);
+
+    context.font = "22px Verdana";
+    context.fillStyle = "#777";
+    const ago = ((Date.now() - data.bgnow.mills) / 1000 / 60) | 0;
+    let agoDisplay;
+    if (ago > 5) {
+      agoDisplay = ago + "m";
+    } else {
+      agoDisplay = "–".repeat(ago);
+    }
+    context.fillText(agoDisplay, Width / 2 + 20, Height / 2 + 50);
 
     return this.canvas.toDataURL();
   }
