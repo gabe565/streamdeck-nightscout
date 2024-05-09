@@ -79,7 +79,7 @@ class Nightscout {
 
     this.renderTimeout = null;
 
-    const image = this.template.render(this.response, this.settings.unit);
+    const image = this.template.render(this.response, this.settings);
     if (image) {
       $SD.setImage(this.context, image);
       if (!this.renderTimeout) {

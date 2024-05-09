@@ -14,7 +14,7 @@ class Template {
     this.img.src = "actions/template/assets/action.svg";
   }
 
-  render(data, unit) {
+  render(data, settings) {
     if (!this.loaded) {
       return;
     }
@@ -26,19 +26,24 @@ class Template {
     const imgHeight = Height / 4;
     context.drawImage(this.img, 10, Height / 2 - imgHeight / 2, imgWidth, imgHeight);
 
-    context.fillStyle = "#fff";
     context.textAlign = "center";
     context.font = "36px Verdana";
     let last = data.bgnow.last;
-    if (unit === Unit.Mmol) {
+    if (settings.unit === Unit.Mmol) {
       last = NSUtils.toMmol(last);
+    }
+    if (last >= settings.urgentHigh || last <= settings.urgentLow) {
+      context.fillStyle = settings.urgentColor;
+    } else if (last >= settings.normalHigh || last <= settings.normalLow) {
+      context.fillStyle = settings.normalColor;
+    } else {
+      context.fillStyle = settings.inRangeColor;
     }
     context.fillText(last, Width / 2 + 20, Height / 2 - 10);
 
     context.font = "25px Verdana";
-    context.fillStyle = "#ddd";
     let delta = data.delta.display;
-    if (unit === Unit.Mmol) {
+    if (settings.unit === Unit.Mmol) {
       delta = NSUtils.toMmol(data.delta.scaled);
       if (delta >= 0) {
         delta = "+" + delta;

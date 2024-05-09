@@ -11,6 +11,7 @@ A Nightscout plugin for the Elgato Stream Deck.
 - Displays current blood sugar reading, change since last reading, and an arrow
 - Supports mg/dL and mmol/L
 - Supports Nightscout API tokens
+- Changes color based on whether the current reading is in-range
 - Only requests new data when a new reading should be available, which gives timely data while also conserving battery life
 
 ## Installation
