@@ -1,5 +1,7 @@
 const Width = 144;
 const Height = 144;
+const FontFamily =
+  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
 
 class Template {
   constructor() {
@@ -24,10 +26,10 @@ class Template {
 
     const imgWidth = Width / 4;
     const imgHeight = Height / 4;
-    context.drawImage(this.img, 10, Height / 2 - imgHeight / 2, imgWidth, imgHeight);
+    context.drawImage(this.img, 10, imgHeight / 2 + 12, imgWidth, imgHeight);
 
     context.textAlign = "center";
-    context.font = "36px Verdana";
+    context.font = `46px ${FontFamily}`;
     let last = data.bgnow.last;
     if (settings.unit === Unit.Mmol) {
       last = NSUtils.toMmol(last);
@@ -41,7 +43,7 @@ class Template {
     }
     context.fillText(last, Width / 2 + 20, Height / 2 - 10);
 
-    context.font = "25px Verdana";
+    context.font = `32px ${FontFamily}`;
     let delta = data.delta.display;
     if (settings.unit === Unit.Mmol) {
       delta = NSUtils.toMmol(data.delta.scaled);
@@ -49,18 +51,18 @@ class Template {
         delta = "+" + delta;
       }
     }
-    context.fillText(`${data.direction.label} ${delta}`, Width / 2 + 20, Height / 2 + 20);
+    context.fillText(`${data.direction.label}   ${delta}`, Width / 2, Height / 2 + 30);
 
-    context.font = "22px Verdana";
+    context.font = `20px ${FontFamily}`;
     context.fillStyle = "#777";
     const ago = ((Date.now() - data.bgnow.mills) / 1000 / 60) | 0;
     let agoDisplay;
     if (ago > 5) {
       agoDisplay = ago + "m";
     } else {
-      agoDisplay = "–".repeat(ago);
+      agoDisplay = "– ".repeat(ago).trim();
     }
-    context.fillText(agoDisplay, Width / 2 + 20, Height / 2 + 50);
+    context.fillText(agoDisplay, Width / 2, Height / 2 + 57);
 
     return this.canvas.toDataURL();
   }
