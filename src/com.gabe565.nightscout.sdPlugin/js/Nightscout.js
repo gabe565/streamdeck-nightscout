@@ -31,7 +31,7 @@ class Nightscout {
         }
       }
       this.url = new URL(this.settings.nightscoutUrl);
-      this.url.pathname += "api/v2/properties";
+      this.url.pathname += "api/v2/properties/bgnow,buckets,delta,direction";
       this.beginTick();
     }
   }
