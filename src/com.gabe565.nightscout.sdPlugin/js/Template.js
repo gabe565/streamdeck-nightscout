@@ -5,21 +5,20 @@ const FontFamily =
 
 class Template {
   constructor() {
-    this.loaded = true;
+    this.loaded = new Promise((resolve, reject) => {
+      this.img = new Image();
+      this.img.onload = () => resolve();
+      this.img.onerror = () => reject(new Error("failed to load image"));
+      this.img.src = "actions/template/assets/action.svg";
+    });
 
     this.canvas = document.createElement("canvas");
     this.canvas.width = Width;
     this.canvas.height = Height;
-
-    this.img = new Image();
-    this.img.onload = () => (this.loaded = true);
-    this.img.src = "actions/template/assets/action.svg";
   }
 
-  render(data, settings) {
-    if (!this.loaded) {
-      return;
-    }
+  async render(data, settings) {
+    await this.loaded;
 
     const context = this.canvas.getContext("2d");
     context.clearRect(0, 0, Width, Height);

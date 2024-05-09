@@ -47,7 +47,7 @@ class Nightscout {
     try {
       const response = await fetch(this.url, this.request);
       this.response = await response.json();
-      this.render();
+      await this.render();
 
       try {
         const bucket = this.response.buckets[0];
@@ -72,14 +72,14 @@ class Nightscout {
     }
   }
 
-  render() {
+  async render() {
     if (!this.response) {
       return;
     }
 
     this.renderTimeout = null;
 
-    const image = this.template.render(this.response, this.settings);
+    const image = await this.template.render(this.response, this.settings);
     if (image) {
       $SD.setImage(this.context, image);
       if (!this.renderTimeout) {
