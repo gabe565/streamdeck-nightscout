@@ -31,7 +31,7 @@ class Template {
     context.font = "36px Verdana";
     let last = data.bgnow.last;
     if (unit === Unit.Mmol) {
-      last = Math.round(last * ConversionFactor * 10) / 10;
+      last = NSUtils.toMmol(last);
     }
     context.fillText(last, Width / 2 + 20, Height / 2 - 10);
 
@@ -39,7 +39,7 @@ class Template {
     context.fillStyle = "#ddd";
     let delta = data.delta.display;
     if (unit === Unit.Mmol) {
-      delta = Math.round(data.delta.scaled * ConversionFactor * 10) / 10;
+      delta = NSUtils.toMmol(data.delta.scaled);
       if (delta >= 0) {
         delta = "+" + delta;
       }
