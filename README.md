@@ -1,6 +1,6 @@
 # Nightscout Stream Deck Plugin
 
-A Nightscout plugin for the Elgato Stream Deck.
+A Stream Deck plugin which displays blood sugar data from [Nightscout](https://github.com/nightscout/cgm-remote-monitor).
 
 <p align="center">
   <img src="./assets/preview.svg" title="Nightscout Preview Image" align="center" width="100"/>
