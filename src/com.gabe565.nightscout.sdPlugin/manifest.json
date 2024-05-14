@@ -2,7 +2,7 @@
   "SDKVersion": 2,
   "Author": "Gabe Cook",
   "CodePath": "index.html",
-  "Description": "Nightscout for the Stream Deck",
+  "Description": "Display live blood sugar data from Nightscout.",
   "Name": "Nightscout",
   "Icon": "actions/template/assets/icon",
   "URL": "https://github.com/gabe565/streamdeck-nightscout",
@@ -33,7 +33,7 @@
         }
       ],
       "SupportedInMultiActions": false,
-      "Tooltip": "Nightscout for the Stream Deck",
+      "Tooltip": "Display live blood sugar data from Nightscout.",
       "UUID": "com.gabe565.nightscout.action",
       "PropertyInspectorPath": "actions/template/property-inspector/index.html"
     }
