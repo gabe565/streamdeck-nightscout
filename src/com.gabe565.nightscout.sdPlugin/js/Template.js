@@ -29,7 +29,10 @@ class Template {
 
     context.textAlign = "center";
     context.font = `46px ${FontFamily}`;
-    let last = data.bgnow.last;
+    let last = data.bgnow?.last;
+    if (!last) {
+      throw new Error("Blood sugar missing");
+    }
     if (settings.unit === Unit.Mmol) {
       last = NSUtils.toMmol(last);
     }
@@ -43,7 +46,7 @@ class Template {
     context.fillText(last, Width / 2 + 20, Height / 2 - 10);
 
     context.font = `32px ${FontFamily}`;
-    let delta = data.delta.display;
+    let delta = data.delta?.display || "";
     if (settings.unit === Unit.Mmol) {
       delta = NSUtils.toMmol(data.delta.scaled);
       if (delta >= 0) {
@@ -52,16 +55,18 @@ class Template {
     }
     context.fillText(`${data.direction.label}   ${delta}`, Width / 2, Height / 2 + 30);
 
-    context.font = `20px ${FontFamily}`;
-    context.fillStyle = "#777";
-    const ago = ((Date.now() - data.bgnow.mills) / 1000 / 60) | 0;
-    let agoDisplay;
-    if (ago > 5) {
-      agoDisplay = ago + "m";
-    } else {
-      agoDisplay = "– ".repeat(ago).trim();
+    if (data.bgnow?.mills) {
+      context.font = `20px ${FontFamily}`;
+      context.fillStyle = "#777";
+      const ago = ((Date.now() - data.bgnow.mills) / 1000 / 60) | 0;
+      let agoDisplay;
+      if (ago > 5) {
+        agoDisplay = ago + "m";
+      } else {
+        agoDisplay = "– ".repeat(ago).trim();
+      }
+      context.fillText(agoDisplay, Width / 2, Height / 2 + 57);
     }
-    context.fillText(agoDisplay, Width / 2, Height / 2 + 57);
 
     return this.canvas.toDataURL();
   }

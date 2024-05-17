@@ -49,18 +49,14 @@ class Nightscout {
       this.response = await response.json();
       await this.render();
 
-      try {
-        const bucket = this.response.buckets[0];
-        if (bucket) {
-          const lastDiff = bucket.toMills - bucket.fromMills;
-          const nextRead = this.response.bgnow.mills + lastDiff + 30000;
-          const now = Date.now();
-          if (nextRead - now > 0) {
-            sleepMs = nextRead - now;
-          }
+      const bucket = this.response?.buckets?.[0];
+      if (bucket) {
+        const lastDiff = bucket.toMills - bucket.fromMills;
+        const nextRead = this.response?.bgnow?.mills + lastDiff + 30000;
+        const now = Date.now();
+        if (nextRead - now > 0) {
+          sleepMs = nextRead - now;
         }
-      } catch (err) {
-        console.error(err);
       }
     } catch (err) {
       console.error(err);
@@ -79,25 +75,27 @@ class Nightscout {
 
     this.renderTimeout = null;
 
-    const image = await this.template.render(this.response, this.settings);
-    if (image) {
-      $SD.setImage(this.context, image);
-      if (!this.renderTimeout) {
-        let sleepMs = 60000;
-        try {
-          const mills = this.response.bgnow.mills;
+    try {
+      const image = await this.template.render(this.response, this.settings);
+      if (image) {
+        $SD.setImage(this.context, image);
+        if (!this.renderTimeout) {
+          let sleepMs = 60000;
+          const mills = this.response.bgnow?.mills;
           if (mills) {
             let diff = (Date.now() - mills) % 60000;
             sleepMs = 60000 - diff;
           }
-        } catch (err) {
-          console.error(err);
-        }
 
-        if (!this.renderTimeout) {
-          this.renderTimeout = setTimeout(() => this.render(), sleepMs);
+          if (!this.renderTimeout) {
+            this.renderTimeout = setTimeout(() => this.render(), sleepMs);
+          }
         }
       }
+    } catch (err) {
+      console.error(err);
+      $SD.showAlert(this.context);
+      $SD.setImage(this.context);
     }
   }
 
