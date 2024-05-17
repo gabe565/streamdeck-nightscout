@@ -32,16 +32,16 @@ class Nightscout {
       }
       this.url = new URL(this.settings.nightscoutUrl);
       this.url.pathname += "api/v2/properties/bgnow,buckets,delta,direction";
-      this.start();
     }
   }
 
   async fetch() {
+    clearTimeout(this.fetchTimeout);
+    this.fetchTimeout = null;
+
     if (!this.url) {
       return;
     }
-
-    this.fetchTimeout = null;
 
     let sleepMs = 60000;
     try {
@@ -69,27 +69,27 @@ class Nightscout {
   }
 
   async render() {
+    clearTimeout(this.renderTimeout);
+    this.renderTimeout = null;
+
     if (!this.response) {
       return;
     }
-
-    this.renderTimeout = null;
 
     try {
       const image = await this.template.render(this.response, this.settings);
       if (image) {
         $SD.setImage(this.context, image);
-        if (!this.renderTimeout) {
-          let sleepMs = 60000;
-          const mills = this.response.bgnow?.mills;
-          if (mills) {
-            let diff = (Date.now() - mills) % 60000;
-            sleepMs = 60000 - diff;
-          }
 
-          if (!this.renderTimeout) {
-            this.renderTimeout = setTimeout(() => this.render(), sleepMs);
-          }
+        let sleepMs = 60000;
+        const mills = this.response.bgnow?.mills;
+        if (mills) {
+          let diff = (Date.now() - mills) % 60000;
+          sleepMs = 60000 - diff;
+        }
+
+        if (!this.renderTimeout) {
+          this.renderTimeout = setTimeout(() => this.render(), sleepMs);
         }
       }
     } catch (err) {
@@ -99,24 +99,10 @@ class Nightscout {
     }
   }
 
-  async start() {
-    if (!this.url) {
-      return;
-    }
-
-    this.stop();
-    await this.fetch();
-  }
-
   stop() {
-    if (this.fetchTimeout) {
-      clearTimeout(this.fetchTimeout);
-    }
+    clearTimeout(this.fetchTimeout);
     this.fetchTimeout = null;
-
-    if (this.renderTimeout) {
-      clearTimeout(this.renderTimeout);
-    }
+    clearTimeout(this.renderTimeout);
     this.renderTimeout = null;
   }
 

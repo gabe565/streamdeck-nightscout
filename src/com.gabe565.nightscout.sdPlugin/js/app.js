@@ -4,11 +4,13 @@
 
 const nightscoutAction = new Action("com.gabe565.nightscout.action");
 
-nightscoutAction.onDidReceiveSettings((data) =>
-  new Nightscout(data).setSettings(data.payload.settings),
-);
+nightscoutAction.onDidReceiveSettings(async (data) => {
+  const ns = new Nightscout(data);
+  await ns.setSettings(data.payload.settings);
+  await ns.fetch();
+});
 
-nightscoutAction.onKeyDown((data) => new Nightscout(data).start());
+nightscoutAction.onKeyDown((data) => new Nightscout(data).fetch());
 
 nightscoutAction.onWillDisappear((data) => {
   const ns = new Nightscout(data);
@@ -19,4 +21,4 @@ nightscoutAction.onWillDisappear((data) => {
   }
 });
 
-nightscoutAction.onWillAppear((data) => new Nightscout(data).start());
+nightscoutAction.onWillAppear((data) => new Nightscout(data).fetch());
