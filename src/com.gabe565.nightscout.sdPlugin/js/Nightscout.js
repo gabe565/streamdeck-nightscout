@@ -73,6 +73,7 @@ class Nightscout {
     this.renderTimeout = null;
 
     if (!this.response) {
+      $SD.setImage(this.context);
       return;
     }
 
